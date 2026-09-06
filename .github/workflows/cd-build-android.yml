@@ -6,6 +6,10 @@ on:
     tags:
       - "v*" # Chỉ tự động build khi push Tag có dạng v1.0.0, v1.0.1...
 
+permissions:
+  contents: write
+
+
 jobs:
   build-android:
     name: Build Android APK
