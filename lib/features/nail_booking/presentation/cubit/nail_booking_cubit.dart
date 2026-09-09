@@ -117,12 +117,19 @@ class NailBookingCubit extends Cubit<NailBookingState> {
   }
 
   void updateExtraServices(List<String?> services) {
+    // Fix bug: trước đây `updateExtraServices` xóa luôn `selectedStylist` +
+    // `artists` + `timeSlots`. Điều này khiến khi user đính kèm dịch vụ
+    // (ngâm chân thảo mộc, cắt da tay...) ở step 2 rồi sang step 3 chọn ngày,
+    // `selectDate()` thấy `selectedStylist == null` → nhảy vào `_loadSalonSlots()`
+    // → gọi SAI API `POST /api/Bookings/salon-available-slots` thay vì
+    // `GET /api/Bookings/artist-available-slots?NailArtistId=...`.
+    //
+    // Sau fix: KHÔNG xóa thợ. Chỉ clear time đã chọn + reload slots
+    // (giữ nguyên `selectedStylist` + `artists` để API gọi đúng endpoint).
     emit(
       state.copyWith(
         selectedExtraServices: services,
-        clearStylist: true,
         clearTime: true,
-        artists: [],
         timeSlots: [],
       ),
     );
@@ -466,7 +473,21 @@ class NailBookingCubit extends Cubit<NailBookingState> {
       final token = data['holdToken']?.toString();
       final expiresAtStr = data['expiresAt']?.toString();
 
-      if (token == null || token.isEmpty) return;
+      // Fix bug "app đơ khi bấm Tiếp tục":
+      // Nếu backend trả token rỗng hoặc null → không có hold. Trước fix:
+      // không emit gì cả → isHolding vẫn false → _holdSelectedSlot return false
+      // nhưng không thông báo → user thấy app đơ. Sau fix: báo lỗi rõ ràng.
+      if (token == null || token.isEmpty) {
+        emit(
+          state.copyWith(
+            clearHoldToken: true,
+            isHolding: false,
+            holdRemainingSeconds: 0,
+            errorMessage: 'Không thể giữ khung giờ này. Vui lòng chọn giờ khác.',
+          ),
+        );
+        return;
+      }
 
       // Bỏ qua việc tính difference từ expiresAt vì đồng hồ device có thể lệch với server.
       // Ưu tiên dùng remainingSeconds từ server trả về, nếu không có mặc định 300s (5 phút).
@@ -514,6 +535,8 @@ class NailBookingCubit extends Cubit<NailBookingState> {
       } else {
         // Các lỗi khác (validation, auth, network...) — chỉ thông báo,
         // không xoá thời gian user đã chọn để tránh UX khó chịu.
+        // Fix bug "app đơ": luôn set isHolding = false để _holdSelectedSlot
+        // nhận ra hold fail và return false + BlocConsumer hiển thị lỗi.
         emit(
           state.copyWith(
             clearHoldToken: true,
