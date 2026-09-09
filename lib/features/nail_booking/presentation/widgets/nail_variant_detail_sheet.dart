@@ -509,24 +509,9 @@ class _NailVariantDetailSheetState extends State<NailVariantDetailSheet> {
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
                     ),
-                    subtitle: Text(
-                      S.of(context).minutesLabel('${method.duration}'),
-                      style: TextStyle(
-                        color: Colors.grey.shade500,
-                        fontSize: 12,
-                      ),
-                    ),
-                    secondary: Text(
-                      PriceFormatter.format(method.price),
-                      style: const TextStyle(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                    activeColor: AppColors.primary,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                   ),
+                  activeColor: AppColors.primary,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                 ),
               );
             }),
