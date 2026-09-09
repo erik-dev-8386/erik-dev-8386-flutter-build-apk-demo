@@ -50,3 +50,5 @@ google-login.json
 .claude/
 AGENTS.md
 CLAUDE.md
+
+lib/core/constants/app_constants.dart
