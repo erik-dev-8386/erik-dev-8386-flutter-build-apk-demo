@@ -956,6 +956,8 @@ class _DetailContentState extends State<_DetailContent> {
                         horizontal: 16,
                       ),
                     ),
+                    activeColor: AppColors.primary,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                   ),
                 );
               }),

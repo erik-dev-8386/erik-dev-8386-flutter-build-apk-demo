@@ -451,6 +451,10 @@ class _NailVariantDetailSheetState extends State<NailVariantDetailSheet> {
               final selected =
                   _selectedShapeMethod?.shapeMethodConfigId ==
                   method.shapeMethodConfigId;
+              // Fix Flutter exception "RadioListTile background color or ink
+              // splashes may be invisible": wrap Material quanh RadioListTile
+              // để nó tìm được Material ancestor, đảm bảo ink splash và hit
+              // test hoạt động đúng.
               return Container(
                 margin: const EdgeInsets.only(bottom: 10),
                 decoration: BoxDecoration(
@@ -484,9 +488,9 @@ class _NailVariantDetailSheetState extends State<NailVariantDetailSheet> {
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
                     ),
+                    activeColor: AppColors.primary,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                   ),
-                  activeColor: AppColors.primary,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                 ),
               );
             }),
