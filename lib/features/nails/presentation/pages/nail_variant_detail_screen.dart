@@ -929,6 +929,12 @@ class _DetailContentState extends State<_DetailContent> {
                     type: MaterialType.transparency,
                     child: RadioListTile<int>(
                       value: method.shapeMethodConfigId,
+                      groupValue: _selectedShapeMethod?.shapeMethodConfigId,
+                      onChanged: (val) {
+                        if (val != null) {
+                          setState(() => _selectedShapeMethod = method);
+                        }
+                      },
                       title: Text(
                         method.name,
                         style: const TextStyle(
