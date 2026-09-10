@@ -44,6 +44,8 @@ class HomePage extends StatelessWidget {
 
               const SizedBox(height: 36),
 
+              const HomeOurSalons(),
+
               const OurPromisePage(),
 
               const SizedBox(height: 36),
@@ -55,6 +57,46 @@ class HomePage extends StatelessWidget {
               _buildCallToAction(context),
 
               const SizedBox(height: 24),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class HomeOurSalons extends StatelessWidget {
+  const HomeOurSalons({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = S.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.homeSalonsTitle,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.homeSalonsSubtitle,
+                style: TextStyle(color: Colors.grey.shade700, height: 1.4),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => context.push('/salons'),
+                child: Text(l10n.homeSalonsButton),
+              ),
             ],
           ),
         ),
