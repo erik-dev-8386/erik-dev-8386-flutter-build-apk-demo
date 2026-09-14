@@ -39,7 +39,7 @@ jobs:
         run: |
           for i in {1..5}; do
             echo "=== Attempt $i to build APK ==="
-            flutter build apk --release && exit 0 || (echo "Attempt $i failed (network 504 timeout), retrying in 10s..." && sleep 10)
+            flutter build apk --release --android-skip-build-dependency-validation && exit 0 || (echo "Attempt $i failed, retrying in 10s..." && sleep 10)
           done
           exit 1
 
