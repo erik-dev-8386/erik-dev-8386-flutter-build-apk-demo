@@ -39,8 +39,18 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Pre-download Gradle Distribution
+        run: |
+          echo "Pre-downloading Gradle 8.13 distribution via curl..."
+          curl -sSL --retry 5 --retry-all-errors --connect-timeout 30 "https://services.gradle.org/distributions/gradle-8.13-bin.zip" -o /tmp/gradle-8.13-bin.zip || true
+
       - name: Build APK (Release)
-        run: flutter build apk --release
+        run: |
+          for i in {1..5}; do
+            echo "=== Attempt $i to build APK ==="
+            flutter build apk --release && exit 0 || (echo "Attempt $i failed (network 504 timeout), retrying in 10s..." && sleep 10)
+          done
+          exit 1
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
